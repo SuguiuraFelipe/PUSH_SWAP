@@ -6,61 +6,96 @@
 /*   By: fsuguiur <fsuguiur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:24:36 by fsuguiur          #+#    #+#             */
-/*   Updated: 2025/06/15 14:21:48 by fsuguiur         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:43:24 by fsuguiur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./header/push_swap.h"
+#include "../header/push_swap.h"
 
-int has_duplicate(t_stack *stack, int value)
+static void free_and_quit(t_stack *stack)
 {
-    t_node *current = stack->top;
-    while (current)
-    {
-        if (current->value == value)
-            return (1);
-        current = current->next;
-    }
-    return (0);
+    free_stack(stack);
+    free(stack);
+    write(2, "Error\n", 6);
+    exit(EXIT_FAILURE);
 }
 
-void validate_and_parse_args(int ac, char **av, t_stack *stack_a)
+static int	check_duplicates(t_stack *stack)
 {
-    int         i;
-    long int    nb;
-    char        *endptr;
+    t_node	*tmp1;
+    t_node	*tmp2;
 
-    if (ac < 2)
+    tmp1 = stack->top;
+    while (tmp1)
+    {
+        tmp2 = tmp1->next;
+        while (tmp2)
+        {
+            if (tmp1->value == tmp2->value)
+                return (0);
+            tmp2 = tmp2->next;
+        }
+        tmp1 = tmp1->next;
+    }
+    return (1);
+}
+
+static int	is_sorted(t_stack *stack)
+{
+    t_node	*tmp;
+
+    tmp = stack->top;
+    while (tmp && tmp->next)
+    {
+        if (tmp->value > tmp->next->value)
+            return (0);
+        tmp = tmp->next;
+    }
+    return (1);
+}
+
+static void	sort_stack(t_stack *a)
+{
+    t_stack	*b;
+
+    b = malloc(sizeof(t_stack));
+    if (!b)
         return;
+    b->top = NULL;
 
-    i = ac - 1;
-    while (i >= 1)
-    {
-        errno = 0; 
-        nb = strtol(av[i], &endptr, 10);
-        if (*endptr != '\0' || endptr == av[i] || (errno == ERANGE && (nb == LONG_MAX || nb == LONG_MIN)) || nb < INT_MIN || nb > INT_MAX)
-            error_and_exit(stack_a, NULL);
-        if (has_duplicate(stack_a, (int)nb))
-            error_and_exit(stack_a, NULL);
-        push(stack_a, (int)nb);
-        i--;
-    }
+    if (stack_size(a) == 2)
+        sa(a);
+    else if (stack_size(a) <= 70)
+        sort_small(a, b);
+    else
+        radix(a, b);
+
+    free_stack(b);
+    free(b);
 }
 
-int main(int ac, char **av)
+int	main(int argc, char **argv)
 {
-    t_stack stack_a;
-    t_stack stack_b;
+    t_stack	*a;
+    t_stack	*b;
 
-    stack_a.top = NULL;
-    stack_b.top = NULL;
-
-    validate_and_parse_args(ac, av, &stack_a);
-
-    // Fase 2: Implementar o algoritmo de ordenação aqui
-
-    free_stack(&stack_a);
-    free_stack(&stack_b);
-
+    if (argc == 1)
+        return (0);
+    b = malloc(sizeof(t_stack));
+    a = malloc(sizeof(t_stack));
+    if (!a || !b)
+        return (1);
+    a->top = NULL;
+    b->top = NULL;
+    if (!init_stack(++argv, a))
+        free_and_quit(a);
+    if (!check_duplicates(a))
+        free_and_quit(a);
+    if (!is_sorted(a))
+        sort_stack(a);
+    free_stack(a);
+    free(a);
+    free_stack(b);
+    free(b);
     return (0);
 }
