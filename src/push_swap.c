@@ -6,7 +6,7 @@
 /*   By: fsuguiur <fsuguiur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:24:36 by fsuguiur          #+#    #+#             */
-/*   Updated: 2025/06/25 16:24:05 by fsuguiur         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:15:17 by fsuguiur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	sort_stack(t_stack *a)
 	b->top = NULL;
 	if (stack_size(a) == 2)
 		sa(a);
-	else if (stack_size(a) <= 70)
+	else if (stack_size(a) < 6)
 		sort_small(a, b);
 	else
 		radix(a, b);

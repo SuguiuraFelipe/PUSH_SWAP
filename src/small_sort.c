@@ -6,7 +6,7 @@
 /*   By: fsuguiur <fsuguiur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 17:38:37 by fsuguiur          #+#    #+#             */
-/*   Updated: 2025/06/25 16:34:55 by fsuguiur         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:21:47 by fsuguiur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,26 @@
 
 static void	sort_three(t_stack *a)
 {
-	int	first;
-	int	second;
-	int	third;
+    int f = a->top->value;
+    int s = a->top->next->value;
+    int t = a->top->next->next->value;
 
-	if (!a->top || !a->top->next || !a->top->next->next)
-		return ;
-	first = a->top->value;
-	second = a->top->next->value;
-	third = a->top->next->next->value;
-	if (first > second && second < third && first < third)
-		sa(a);
-	else if (first > second && second > third && first > third)
-	{
-		sa(a);
-		rra(a);
-	}
-	else if (first > second && second < third && first > third)
-		ra(a);
-	else if (first < second && second > third && first < third)
-	{
-		sa(a);
-		ra(a);
-	}
-	else if (first < second && second > third && first > third)
-		rra(a);
+    if (f > s && s < t && f < t)
+        sa(a);
+    else if (f > s && s > t)
+    {
+        sa(a);
+        rra(a);
+    }
+    else if (f > s && s < t && f > t)
+        ra(a);
+    else if (f < s && s > t && f < t)
+    {
+        sa(a);
+        ra(a);
+    }
+    else if (f < s && s > t && f > t)
+        rra(a);
 }
 
 static int	find_min_index(t_stack *stack)
@@ -65,38 +60,33 @@ static int	find_min_index(t_stack *stack)
 	return (min_i);
 }
 
-void	bring_min_to_top(t_stack *a, int min_i, int size)
+static void	bring_min_to_top(t_stack *a, int min_i, int size)
 {
-	int	i;
-
-	if (min_i <= size / 2)
-	{
-		i = min_i;
-		while (i-- > 0)
-			ra(a);
-	}
-	else
-	{
-		i = size - min_i;
-		while (i-- > 0)
-			rra(a);
-	}
+    if (min_i <= size / 2)
+        while (min_i-- > 0)
+            ra(a);
+    else
+    {
+        int i = size - min_i;
+        while (i-- > 0)
+            rra(a);
+    }
 }
 
 void	sort_small(t_stack *a, t_stack *b)
 {
-	int	min_i;
-	int	size;
+    int	min_i;
+    int	size;
 
-	size = stack_size(a);
-	while (size > 3)
-	{
-		min_i = find_min_index(a);
-		bring_min_to_top(a, min_i, size);
-		pb(a, b);
-		size--;
-	}
-	sort_three(a);
-	while (b && b->top)
-		pa(a, b);
+    size = stack_size(a);
+    while (size > 3)
+    {
+        min_i = find_min_index(a);
+        bring_min_to_top(a, min_i, size);
+        pb(a, b);
+        size--;
+    }
+    sort_three(a);
+    while (b->top)
+        pa(a, b);
 }

@@ -6,7 +6,7 @@
 /*   By: fsuguiur <fsuguiur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:21:57 by fsuguiur          #+#    #+#             */
-/*   Updated: 2025/06/25 16:24:22 by fsuguiur         ###   ########.fr       */
+/*   Updated: 2025/06/26 19:14:29 by fsuguiur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void	reverse_rotate(t_stack *stack)
 	}
 	last_node->next = stack->top;
 	stack->top = last_node;
-	write(1, "rra\n", 4);
 }
 
 void	rra(t_stack *stack_a)
